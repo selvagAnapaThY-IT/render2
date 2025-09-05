@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Leave Login</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="animated-bg"></div>
+
+  <div class="login-container">
+    <h2>🎓 Login </h2>
+    <p class="subtitle">Please login to access your dashboard</p>
+    
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" required placeholder="Username" />
+      </div>
+      
+      <div class="input-group password-group">
+        <input type="password" id="password" required placeholder="Password" />
+        <span id="togglePassword"></span>
+      </div>
+      
+      
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="footer-text">New here? <a href="#">Register</a></p>
+  </div>
+
+  
+  <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            
+            // Here you can add your login logic, e.g., sending data to a server
+            console.log('Username:', username);
+            console.log('Password:', password);
+
+            const response =  await fetch('http://localhost:8080/api/leaveform',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+
+            if(response.ok){
+                const data = await response.json();
+                console.log('Login successful:', data);
+                if(data.role === 'tutor'){
+                    window.location.href = 'tutor-dashboard.html';
+                } 
+
+                else if(data.role === 'student'){
+                    window.location.href = 'studentdashboard.html';
+                }
+                else if(data.role=== 'admin'){
+                  window.location.href ='admindashboard.html';
+                }
+                else if(data.role==='hod'){
+                  window.location.href='hoddashboard.html'
+                }
+            } else {
+                alert('Login failed:', response.statusText);
+                // Show error message to the user
+            }
+        });
+    </script>
+</body>
+</html>
