@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #00f0ff, #007cf0, #0052d4);
+
+;
+      background-size: cover;
+      display: flex;
+    }
+
+    /* Overlay for background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: -1;
+    }
+
+    .dashboard-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #1f9ec8;
+      color: #fff;
+      padding: 30px 20px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a,
+    .sidebar ul li p {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-size: 16px;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar ul li a i,
+    .sidebar ul li p i {
+      margin-right: 8px;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li.active p {
+      background-color: #27ae60;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 60px;
+      color: #ffffff; /* Changed text color to white for visibility */
+    }
+
+    .main-content header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .main-content p {
+      font-size: 18px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .dashboard-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 15px;
+        box-shadow: none;
+      }
+
+      .sidebar ul {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .sidebar ul li {
+        margin: 0 10px;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>Student Panel</h2>
+      <ul>
+        <li class="active"><p><i class="fas fa-home"></i> Dashboard</p></li>
+        <li><a href="studentform.html"><i class="fas fa-paper-plane"></i> Apply for Leave</a></li>
+        <li><a href="leaverequeststatus.html"><i class="fas fa-list"></i> My Leave Request</a></li>
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Welcome, Student!</h1>
+      </header>
+      <section class="content">
+        <p>Use the sidebar to apply for leave and check your leave status.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

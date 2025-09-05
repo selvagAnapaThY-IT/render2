@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Leave Form</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* No scrolling */
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #e0f7ff, #c0eaff, #a0dcff, #80ceff, #66bfff);
+
+
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    header {
+      text-align: center;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .form-container {
+      max-width: 550px;
+      margin: 30px auto;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-container input, 
+    .form-container textarea {
+      width: 100%;
+      padding: 6px;
+      margin-top: 3px;
+      border: 1px solid #0db6bf;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .form-container textarea {
+      resize: vertical;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 8px;
+      background-color: #2396c3;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-container button:hover {
+      background-color: #218838;
+    }
+
+    #successMessage {
+      text-align: center;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Student Leave Form 📄</header>
+
+  <div class="form-container" id="formSection">
+    <h2>Fill in Your Details</h2>
+    <form id="leaveForm">
+
+      <div class="form-row">
+        <label>Student Name:
+          <input type="text" name="studentName" required>
+        </label>
+
+        <label>Roll Number:
+          <input type="text" name="rollNumber" required>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Course:
+          <input type="text" name="course" required>
+        </label>
+
+        <label>Branch:
+          <input type="text" name="branch" required>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Section:
+          <input type="text" name="section" required>
+        </label>
+
+        <label>Parent Name:
+          <input type="text" name="parentName" required>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>Student Phone Number:
+          <input type="text" name="relationship" required>
+        </label>
+
+        <label>Parent Phone Number:
+          <input type="text" name="phone" required>
+        </label>
+      </div>
+
+      <!-- From Date & To Date stacked vertically -->
+      <label>From Date:
+        <input type="text" name="fromDate" id="fromDate" required>
+      </label>
+
+      <label>To Date:
+        <input type="text" name="toDate" id="toDate" required>
+      </label>
+
+      <label>Total Days:
+        <input type="number" name="totalDays" id="totalDays" readonly required>
+      </label>
+
+      <label>Reason:
+        <textarea name="reason" rows="3" required></textarea>
+      </label>
+
+      <button type="submit">Submit Leave Request</button>
+    </form>
+
+    <p id="successMessage">✅ Your form has been submitted successfully!</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#fromDate", { dateFormat: "Y-m-d", onChange: calculateDays });
+    flatpickr("#toDate", { dateFormat: "Y-m-d", onChange: calculateDays });
+
+    function calculateDays() {
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
+      if (from && to) {
+        const start = new Date(from);
+        const end = new Date(to);
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        document.getElementById("totalDays").value = days > 0 ? days : 0;
+      }
+    }
+
+    document.getElementById("leaveForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const days = parseInt(document.getElementById("totalDays").value);
+      if (days === 0) {
+        alert("Leave days cannot be zero!");
+        return;
+      }
+
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      data.status = "PENDING";
+
+      fetch("https://render2-2-rj1f.onrender.com/leaveform/ins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = "sucess.html";
+        } else {
+          alert("Failed to submit request.");
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Server error while submitting.");
+      });
+    });
+  </script>
+
+</body>
