@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Leave</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    
+      background-size: cover;
+      margin: 0;
+      background: linear-gradient(to right, #00f0ff, #007cf0, #0052d4);
+
+      padding: 0;
+      color: #fff;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      margin: 100px auto;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #34495e;
+    }
+
+    td {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    h2, h3 {
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: #f66;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Search Your Leave Details</h2>
+    <input type="text" id="rollNumber" placeholder="Enter Roll Number">
+    <button onclick="search()">Search</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function search() {
+      const rollNo = document.getElementById('rollNumber').value;
+      fetch(`https://render2-2-rj1f.onrender.com/leaveform/search?rollNumber=${rollNo}`)
+        .then(res => {
+          if (!res.ok) throw new Error("No data found");
+          return res.json();
+        })
+        .then(data => {
+          let html = `
+            <h3>Results:</h3>
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Reason</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Days</th>
+              </tr>
+          `;
+          data.forEach(item => {
+            html += `
+              <tr>
+                <td>${item.studentName}</td>
+                <td>${item.status}</td>
+                <td>${item.reason}</td>
+                <td>${item.fromDate}</td>
+                <td>${item.toDate}</td>
+                <td>${item.totalDays}</td>
+              </tr>
+            `;
+          });
+          html += '</table>';
+          document.getElementById('result').innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById('result').innerHTML = `<p class="error">No leave found for roll number ${rollNo}</p>`;
+        });
+    }
+  </script>
+
+</body>
+</html>

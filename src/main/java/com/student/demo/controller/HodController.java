@@ -1,6 +1,7 @@
 package com.student.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.student.demo.model.Hod;
 import com.student.demo.model.LeaveRequest;
-
+import com.student.demo.repository.HodLeaveRequest;
 import com.student.demo.repository.HodRepo;
 import com.student.demo.repository.LeaveRequestRepository;
+import com.student.demo.service.Emailservice;
 import com.student.demo.service.HodleaveRequestService;
 
 @RestController
@@ -28,7 +30,12 @@ public class HodController {
 	 @Autowired
 	    private HodleaveRequestService service;
 	 @Autowired
+	 	private Emailservice serv;
+	 @Autowired
+	 
 	 	private HodRepo hodrepo;
+	 @Autowired
+	 	private HodLeaveRequest ho;
 	 @Autowired
 	    private LeaveRequestRepository leaveRequestRepository;
 	 @PutMapping("/hod/upd/{id}")
@@ -93,6 +100,32 @@ public class HodController {
 	    @PutMapping("/edit/{id}")
 	    public boolean editRequest(@PathVariable Long id, @RequestBody LeaveRequest updated) {
 	        return service.updateRequest(id, updated);
+	    }
+	    @PutMapping("/email/{id}")
+	    public ResponseEntity<String> approveLeaveByHod(@PathVariable Long id) {
+	        Optional<LeaveRequest> optional = ho.findById(id);
+
+	        if (optional.isPresent()) {
+	            LeaveRequest leave = optional.get();
+	            leave.setStatus("HOD_APPROVED");
+	            ho.save(leave);
+
+	            // Use student email
+	            String toEmail = leave.getEmail();  
+	            String subject = "Leave Approved by HOD";
+	            String body = "Hello " + leave.getStudentName() + ",\n\n" +
+	                          "Your leave request from " + leave.getFromDate() + " to " + leave.getToDate() +
+	                          " has been approved by HOD.\n\nRegards,\nCollege Admin";
+
+	            serv.sendEmail(toEmail, subject, body);
+
+	            return ResponseEntity.ok("Leave approved and email sent to " + toEmail);
+	        }
+
+	        return ResponseEntity.notFound().build();
+	    
+
+	        
 	    }
 	   
 	    

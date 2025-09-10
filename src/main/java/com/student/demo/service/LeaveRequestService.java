@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.student.demo.model.LeaveRequest;
 import com.student.demo.repository.LeaveRequestRepository;
 
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -16,6 +17,10 @@ public class LeaveRequestService {
 
     @Autowired
     private LeaveRequestRepository repo;
+  // make sure this path is correct
+
+    @Autowired
+    private Emailservice emailservice;
 
     public void insertLeave(LeaveRequest req) {
         repo.save(req);
@@ -78,7 +83,7 @@ public class LeaveRequestService {
         existingRequest.setTotalDays(updatedRequest.getTotalDays());
         existingRequest.setReason(updatedRequest.getReason());
         existingRequest.setParentName(updatedRequest.getParentName());
-        existingRequest.setRelationship(updatedRequest.getRelationship());
+        existingRequest.setEmail(updatedRequest.getEmail());
         existingRequest.setPhone(updatedRequest.getPhone());
 
         repo.save(existingRequest);
@@ -100,4 +105,27 @@ public class LeaveRequestService {
         }
         return false;
     }
+    public boolean approveLeaveByHod(Long id) {
+        Optional<LeaveRequest> optional = repo.findById(id);
+        if (optional.isPresent()) {
+            LeaveRequest leave = optional.get();
+            leave.setStatus("APPROVED_BY_HOD");
+            repo.save(leave);
+
+            // Send email to student
+            String toEmail = leave.getEmail(); // make sure LeaveRequest has getStudentEmail()
+            String subject = "Leave Approved by HOD";
+            String body = "Hello " + leave.getStudentName() + ",\n\n" +
+                          "Your leave request from " + leave.getFromDate() + " to " + leave.getToDate() +
+                          " has been approved by HOD.\n\nRegards,\nCollege Admin";
+
+            emailservice.sendEmail(toEmail, subject, body);
+
+            return true;
+        }
+        return false;
+    }
+
+   
+
 }

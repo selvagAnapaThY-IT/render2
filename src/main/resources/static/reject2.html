@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rejected Leave Requests</title>
+  <style>
+    body {
+     font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #6dd5fa, #2980b9, #2c3e50);
+
+    background-repeat: repeat;
+    background-size: auto, cover;
+    padding: 40px;
+    margin: 0;
+    }
+    h2 {
+      color: #ff0000;
+    }
+    .card {
+      background-color: #fff;
+      border-left: 5px solid #e74c3c;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Rejected Leave Requests</h2>
+  <div id="rejectedRequestsContainer"></div>
+
+  <script>
+    const apiBase = "https://render2-2-rj1f.onrender.com/leaveform";
+
+    function fetchRejected() {
+      const container = document.getElementById("rejectedRequestsContainer");
+      container.innerHTML = "<p>Loading rejected requests...</p>";
+
+      fetch(`${apiBase}/rejectedbytut`)
+        .then(res => res.json())
+        .then(data => {
+          container.innerHTML = "";
+
+          if (data.length === 0) {
+            container.innerHTML = "<p>No rejected requests found.</p>";
+            return;
+          }
+
+          data.forEach(req => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+              <p><strong>Name:</strong> ${req.studentName}</p>
+              <p><strong>Roll Number:</strong> ${req.rollNumber}</p>
+              <p><strong>From:</strong> ${req.fromDate}</p>
+              <p><strong>To:</strong> ${req.toDate}</p>
+              <p><strong>Reason:</strong> ${req.reason}</p>
+              <p><strong>Status:</strong> ${req.status}</p>
+            `;
+
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          container.innerHTML = "<p>Error loading rejected requests.</p>";
+          console.error("Fetch error:", err);
+        });
+    }
+
+    fetchRejected();
+  </script>
+
+</body>
+</html>

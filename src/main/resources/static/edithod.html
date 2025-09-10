@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update HOD Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+     
+  background: linear-gradient(to right, #6dd5fa, #2980b9, #2c3e50);
+
+  background-size: cover;
+  background-position: center;
+  font-family: 'Segoe UI', sans-serif;
+
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #2e8b57;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #246b44;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Update HOD Details</h2>
+    <form id="updateHodForm">
+      <input type="number" id="hodId" placeholder="Enter HOD ID" required />
+      <input type="text" id="hodName" placeholder="New Name" required />
+      <input type="text" id="hodUsername" placeholder="New Username" required />
+      <input type="password" id="hodPassword" placeholder="New Password" required />
+      <input type="text" id="hodDepartment" placeholder="New Department" required />
+      <button type="submit">Update HOD</button>
+    </form>
+    <div id="responseMessage" style="text-align:center; color: green; margin-top: 10px;"></div>
+  </div>
+
+  <script>
+    document.getElementById("updateHodForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const id = document.getElementById("hodId").value;
+      const data = {
+        name: document.getElementById("hodName").value,
+        username: document.getElementById("hodUsername").value,
+        password: document.getElementById("hodPassword").value,
+        department: document.getElementById("hodDepartment").value
+      };
+
+      fetch(`https://render2-2-rj1f.onrender.com/hodform/updatehod/${id}`, {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Update failed");
+          return res.json();
+        })
+        .then(updated => {
+          document.getElementById("responseMessage").innerText = "HOD updated successfully!";
+        })
+        .catch(err => {
+          document.getElementById("responseMessage").innerText = "Error updating HOD.";
+          console.error("Error:", err);
+        });
+    });
+  </script>
+</body>
+</html>

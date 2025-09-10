@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutor Leave Request Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #6dd5fa, #2980b9, #2c3e50);
+
+    background-repeat: repeat;
+    background-size: auto, cover;
+    padding: 40px;
+    margin: 0;
+    }
+    h2 {
+      color: #333;
+    }
+    title{
+      color: red;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card p {
+      margin: 5px 0;
+    }
+    .btn-group {
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 8px 12px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+    .approve { background-color: green; }
+    .reject { background-color: red; }
+    .forward { background-color: orange; }
+  </style>
+</head>
+<body>
+<!-- Add this inside <body> before or after the heading -->
+<p id="loader" style="font-weight:bold; display:none;">Loading leave requests...</p>
+
+  <h2>Pending Leave Requests (Tutor Dashboard)</h2>
+  <div id="leaveRequestsContainer"></div>
+
+  <script>
+  const apiBase = "https://render2-2-rj1f.onrender.com/leaveform";
+
+  // Fetch all pending leave requests
+  function fetchRequests() {
+    const loader = document.getElementById("loader");
+    const container = document.getElementById("leaveRequestsContainer");
+
+    loader.style.display = "block";     // Show loading text
+    container.innerHTML = "";          // Clear current requests
+
+    fetch(`${apiBase}/pending`)
+      .then(res => res.json())
+      .then(data => {
+        loader.style.display = "none";  // Hide loader
+
+        if (data.length === 0) {
+          container.innerHTML = "<p>No pending requests.</p>";
+          return;
+        }
+
+        data.forEach(req => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML =` 
+            <p><strong>Name:</strong> ${req.studentName}</p>
+            <p><strong>Roll Number:</strong> ${req.rollNumber}</p>
+            <p><strong>Course:</strong> ${req.course}</p>
+            <p><strong>Branch:</strong> ${req.branch}</p>
+            <p><strong>Section:</strong> ${req.section}</p>
+            <p><strong>From:</strong> ${req.fromDate}</p>
+            <p><strong>To:</strong> ${req.toDate}</p>
+            <p><strong>Total Days:</strong> ${req.totalDays}</p>
+            <p><strong>Reason:</strong> ${req.reason}</p>
+            <p><strong>Parent:</strong> ${req.parentName}</p>
+            <p><strong>Relationship:</strong> ${req.relationship}</p>
+            <p><strong>Phone:</strong> ${req.phone}</p>
+            <div class="btn-group">
+              <button class="btn approve" onclick="updateStatus(${req.id}, 'approve')">Approve</button>
+              <button class="btn reject" onclick="updateStatus(${req.id}, 'reject')">Reject</button>
+              <button class="btn forward" onclick="updateStatus(${req.id}, 'forward')">Forward to HOD</button>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        loader.style.display = "none";
+        console.error("Error fetching requests:", err);
+        container.innerHTML = "<p>Error loading requests.</p>";
+      });
+  }
+
+  // Update status (approve, reject, forward)
+  function updateStatus(id, action) {
+    fetch(`${apiBase}/upd/${id}?action=${action}`, {
+      method: "PUT"
+    })
+    .then(res => {
+      if (res.ok) {
+        alert(`Leave request ${action.toUpperCase()}ED!`);
+        fetchRequests(); // Refresh list
+      } else {
+        alert("Failed to update request.");
+      }
+    })
+    .catch(err => {
+      console.error("Error updating:", err);
+      alert("Server error.");
+    });
+  }
+
+  // Initial fetch
+  fetchRequests();
+</script>
+
+</body>
+</html>

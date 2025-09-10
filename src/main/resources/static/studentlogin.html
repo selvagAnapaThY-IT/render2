@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Login</title>
+<style>
+/* Salesforce Inspired Login Page */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f4f8, #d9e6f6);
+    overflow: hidden;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 10;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+.login-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    font-size: 3rem;
+    color: #00a1e0;
+    margin-bottom: 12px;
+    animation: floatLogo 3s ease-in-out infinite alternate;
+}
+
+.login-header h2 {
+    color: #16325c;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    color: #6b6b83;
+    font-size: 14px;
+}
+
+/* Form Group & Input */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #c4c4c4;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #16325c;
+    outline: none;
+}
+
+.input-wrapper input:focus {
+    border-color: #00a1e0;
+    box-shadow: 0 0 0 2px rgba(0, 161, 224, 0.2);
+}
+
+.input-wrapper label {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-size: 14px;
+    color: #6b6b83;
+    pointer-events: none;
+}
+
+.input-wrapper input:focus + label,
+.input-wrapper input:valid + label {
+    top: -8px;
+    left: 12px;
+    font-size: 12px;
+    background: #ffffff;
+    padding: 0 4px;
+    color: #00a1e0;
+}
+
+/* Password Toggle */
+.password-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b6b83;
+    font-size: 14px;
+}
+
+.password-toggle:hover {
+    color: #00a1e0;
+}
+
+/* Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #00a1e0;
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #007bbf;
+    box-shadow: 0 6px 15px rgba(0,161,224,0.3);
+}
+
+/* Background effects */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    animation: floatCloud 20s linear infinite;
+}
+
+.cloud-1 { width: 120px; height: 70px; top: 10%; left: -10%; }
+.cloud-2 { width: 150px; height: 80px; top: 50%; right: -15%; }
+.cloud-3 { width: 100px; height: 60px; bottom: 20%; left: 5%; }
+
+/* Animations */
+@keyframes floatLogo {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes floatCloud {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(120vw); }
+}
+
+@media (max-width: 480px) {
+    .login-card { padding: 30px 20px; }
+    .login-header h2 { font-size: 1.5rem; }
+    .input-wrapper input { padding: 12px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo-icon"></div>
+            <h2>Welcome Back</h2>
+            <p>Login in to your leave system</p>
+        </div>
+        <form class="loginform" id="loginForm" novalidate>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <!-- Added required attribute -->
+                    <input type="text" id="username" name="email" required>
+                    <label for="email">Register No</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <label for="password">Password</label>
+                    <button type="button" class="password-toggle" id="passwordToggle">Show</button>
+                </div>
+            </div>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+    </div>
+    <div class="background-effects">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+    </div>
+</div>
+
+<script>
+const toggleBtn = document.getElementById('passwordToggle');
+const passwordInput = document.getElementById('password');
+toggleBtn.addEventListener('click', () => {
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    toggleBtn.textContent = passwordInput.type === 'password' ? 'Show' : 'Hide';
+});
+</script>
+<script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('Username:', username);
+            console.log('Password:', password);
+
+            const response =  await fetch('https://render2-2-rj1f.onrender.com/api/leaveform',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+
+            if(response.ok){
+                const data = await response.json();
+                console.log('Login successful:', data);
+                if(data.role === 'tutor'){
+                    window.location.href = 'tutor-dashboard.html';
+                } 
+
+                else if(data.role === 'student'){
+                    window.location.href = 'studentdashboard.html';
+                }
+                
+                else if(data.role==='hod'){
+                  window.location.href='hoddashboard.html'
+                }
+            } else {
+                alert('Login failed:', response.statusText);
+            }
+        });
+</script>
+</body>
+</html>

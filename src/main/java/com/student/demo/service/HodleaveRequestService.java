@@ -60,7 +60,7 @@ public class HodleaveRequestService {
         existingRequest.setTotalDays(updatedRequest.getTotalDays());
         existingRequest.setReason(updatedRequest.getReason());
         existingRequest.setParentName(updatedRequest.getParentName());
-        existingRequest.setRelationship(updatedRequest.getRelationship());
+        existingRequest.setEmail(updatedRequest.getEmail());
         existingRequest.setPhone(updatedRequest.getPhone());
 
         repository.save(existingRequest);

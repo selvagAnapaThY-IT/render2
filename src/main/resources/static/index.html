@@ -1,77 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Leave Login</title>
-  <link rel="stylesheet" href="login.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Leave Management - Student Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f3f6fd, #e6f0fc);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 1s ease forwards;
+}
+
+/* Logo & Heading */
+.logo {
+    font-size: 3rem;
+    color: #00a1e0;
+    margin-bottom: 20px;
+    font-weight: bold;
+    animation: bounce 2s infinite;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #172b4d;
+    margin-bottom: 10px;
+}
+
+p.subtitle {
+    font-size: 1rem;
+    color: #5e6c84;
+    margin-bottom: 40px;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 15px 0;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-student {
+    background-color: #00a1e0;
+    color: #ffffff;
+}
+
+.btn-student:hover {
+    background-color: #0090c1;
+    box-shadow: 0 6px 15px rgba(0,161,224,0.3);
+    transform: translateY(-2px);
+}
+
+/* Admin link below button */
+.admin-link {
+    font-size: 0.9rem;
+    color: #0070d2;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+.admin-link:hover {
+    color: #005bb5;
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #5e6c84;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Responsive */
+@media(max-width: 480px){
+    .container {
+        padding: 40px 20px;
+    }
+    h1 { font-size: 1.5rem; }
+}
+</style>
 </head>
 <body>
-  <div class="animated-bg"></div>
 
-  <div class="login-container">
-    <h2>🎓 Login </h2>
-    <p class="subtitle">Please login to access your dashboard</p>
+<div class="container">
+    <div class="logo">🌟</div>
+    <h1>Welcome to Student Leave Management</h1>
+    <p class="subtitle">Efficiently manage your leave requests</p>
+
+    <button class="btn btn-student" onclick="location.href='studentlogin.html'">Login</button>
     
-    <form id="loginForm">
-      <div class="input-group">
-        <input type="text" id="username" required placeholder="Username" />
-      </div>
-      
-      <div class="input-group password-group">
-        <input type="password" id="password" required placeholder="Password" />
-        <span id="togglePassword"></span>
-      </div>
-      
-      
-      <button type="submit">Login</button>
-    </form>
+    <a href="adminloginpage.html" class="admin-link">Click here for Admin</a>
 
-    <p class="footer-text">New here? <a href="#">Register</a></p>
-  </div>
+    <p class="footer">© 2025 Student Leave Management System</p>
+</div>
 
-  
-  <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            
-            // Here you can add your login logic, e.g., sending data to a server
-            console.log('Username:', username);
-            console.log('Password:', password);
-
-            const response =  await fetch('https://render2-2-rj1f.onrender.com/api/leaveform',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            })
-
-            if(response.ok){
-                const data = await response.json();
-                console.log('Login successful:', data);
-                if(data.role === 'tutor'){
-                    window.location.href = 'tutor-dashboard.html';
-                } 
-
-                else if(data.role === 'student'){
-                    window.location.href = 'studentdashboard.html';
-                }
-                else if(data.role=== 'admin'){
-                  window.location.href ='admindashboard.html';
-                }
-                else if(data.role==='hod'){
-                  window.location.href='hoddashboard.html'
-                }
-            } else {
-                alert('Login failed:', response.statusText);
-                // Show error message to the user
-            }
-        });
-    </script>
 </body>
 </html>

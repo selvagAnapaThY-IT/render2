@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Approved Requests (By HOD)</title>
+  <style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #a0e9ff, #70d6ff, #38b6ff);
+
+    background-repeat: repeat;
+    background-size: auto, cover;
+    padding: 40px;
+    margin: 0;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>HOD Approved Leave Requests</h2>
+  <div id="approvedContainer"></div>
+
+  <script>
+    const baseApi = "https://render2-2-rj1f.onrender.com/leaveform";
+
+    function fetchApprovedByHod() {
+      fetch(`${baseApi}/approved-by-hod`) // Make sure this endpoint exists
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("approvedContainer");
+          if (data.length === 0) {
+            container.innerHTML = "<p>No approved requests yet.</p>";
+            return;
+          }
+
+          data.forEach(req => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <p><strong>Name:</strong> ${req.studentName}</p>
+              <p><strong>Roll No:</strong> ${req.rollNumber}</p>
+              <p><strong>From:</strong> ${req.fromDate}</p>
+              <p><strong>To:</strong> ${req.toDate}</p>
+              <p><strong>Reason:</strong> ${req.reason}</p>
+              <p><strong>Status:</strong> ${req.status}</p>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(err => console.error("Error fetching approved:", err));
+    }
+
+    fetchApprovedByHod();
+  </script>
+</body>
+</html>

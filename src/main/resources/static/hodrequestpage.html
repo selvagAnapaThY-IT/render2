@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HOD Leave Requests</title>
+  <style>
+    body {
+       font-family: 'Segoe UI', sans-serif;
+       background: linear-gradient(to right, #a0e9ff, #70d6ff, #38b6ff);
+       background-repeat: repeat;
+       background-size: auto, cover;
+       padding: 40px;
+       margin: 0;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card p, .card input, .card textarea {
+      margin: 5px 0;
+      display: block;
+      width: 50%;
+    }
+    input, textarea {
+      padding: 6px;
+      font-size: 14px;
+    }
+    .btn-group {
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 8px 12px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+    .approve { background-color: green; }
+    .reject { background-color: red; }
+    .edit{background-color: #38b6ff;}
+  </style>
+</head>
+<body>
+
+  <h2>Forwarded Leave Requests (HOD Dashboard)</h2>
+  <div id="hodRequestsContainer"></div>
+
+ <script>
+  const baseApi = "https://render2-2-rj1f.onrender.com/";
+
+  function fetchForwardedRequests() {
+    fetch(`${baseApi}leaveform/forwarded`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("hodRequestsContainer");
+        container.innerHTML = "";
+
+        if (data.length === 0) {
+          container.innerHTML = "<p>No forwarded requests.</p>";
+          return;
+        }
+
+        data.forEach(req => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <p><strong>Name:</strong> ${req.studentName}</p>
+            <p><strong>Roll Number:</strong> ${req.rollNumber}</p>
+            <p><strong>Course:</strong> ${req.course}</p>
+            <p><strong>Branch:</strong> ${req.branch}</p>
+            
+            <p><strong>Section:</strong></p>
+            
+            <label><strong>From:</strong></label>
+            <input type="date" value="${req.fromDate}" id="from-${req.id}">
+
+            <label><strong>To:</strong></label>
+            <input type="date" value="${req.toDate}" id="to-${req.id}">
+
+            <label><strong>Reason:</strong></label>
+            <textarea rows="2" id="reason-${req.id}">${req.reason}</textarea>
+
+            <div class="btn-group">
+              <button class="btn edit" onclick="editRequest(${req.id})">Edit</button>
+              <button class="btn approve" onclick="approveLeave(${req.id})">Approve</button>
+              <button class="btn reject" onclick="updateStatus(${req.id}, 'reject')">Reject</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error("Error fetching forwarded requests:", err);
+      });
+  }
+
+  // ✅ Approve + send email
+  function approveLeave(id) {
+    fetch(`${baseApi}hodform/email/${id}`, {
+      method: "PUT"
+    })
+    .then(res => {
+      if (res.ok) {
+        alert("Request APPROVED and Email Sent!");
+        fetchForwardedRequests();
+      } else {
+        alert("Failed to approve request.");
+      }
+    })
+    .catch(err => console.error("Error approving leave:", err));
+  }
+
+  // ✅ Reject request (no email)
+  function updateStatus(id, action) {
+    fetch(`${baseApi}hodform/hod/upd/${id}?action=${action}`, {
+      method: "PUT"
+    })
+    .then(res => {
+      if (res.ok) {
+        alert(`Request ${action.toUpperCase()}ED!`);
+        fetchForwardedRequests();
+      } else {
+        alert("Failed to update request.");
+      }
+    })
+    .catch(err => console.error("Error updating status:", err));
+  }
+
+  function editRequest(id) {
+    const fromDate = document.getElementById(`from-${id}`).value;
+    const toDate = document.getElementById(`to-${id}`).value;
+    const reason = document.getElementById(`reason-${id}`).value;
+
+    fetch(`${baseApi}hodform/edit/${id}`, {   // ✅ fixed URL (was /edit, should be /hodform/edit)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fromDate, toDate, reason })
+    })
+    .then(res => {
+      if (res.ok) {
+        alert("Request updated.");
+        fetchForwardedRequests();
+      } else {
+        alert("Edit failed.");
+      }
+    })
+    .catch(err => {
+      console.error("Error editing request:", err);
+    });
+  }
+
+  // Initial load
+  fetchForwardedRequests();
+</script>
+
+
+</body>
+</html>

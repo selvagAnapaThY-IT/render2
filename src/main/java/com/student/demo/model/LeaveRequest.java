@@ -19,7 +19,7 @@ public class LeaveRequest {
     private int totalDays;
     private String reason;
     private String parentName;
-    private String relationship;
+    private String email;
     private String phone;
     private String status = "PENDING";
 	public Long getId() {
@@ -88,14 +88,21 @@ public class LeaveRequest {
 	public void setParentName(String parentName) {
 		this.parentName = parentName;
 	}
-	public String getRelationship() {
-		return relationship;
-	}
-	public void setRelationship(String relationship) {
-		this.relationship = relationship;
-	}
+	
 	public String getPhone() {
 		return phone;
+	}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;

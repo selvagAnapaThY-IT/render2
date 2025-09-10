@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('adminwelcome.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+    }
+
+    .dashboard-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: rgba(44, 62, 80, 0.95);
+      color: #fff;
+      padding: 30px 20px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+
+    .sidebar ul li a, .sidebar ul li p {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-size: 16px;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #3498db;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 60px;
+      color: #ffffff;
+      
+    }
+
+    .main-content header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .main-content p {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>Admin Panel</h2>
+      <ul>
+        <li><p>Dashboard</p></li>
+        <li><a href="addhod.html">Add Hod</a></li>
+        <li><a href="viewhod.html">View Hod list</a></li>
+        <li><a href="edithod.html">Edit HOD</a></li>
+        <li><a href="adminloginpage.html">Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Welcome, Admin!</h1>
+      </header>
+      <section class="content">
+        <p>Use the options on the sidebar to manage departments and assign HODs.</p>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
