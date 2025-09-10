@@ -12,8 +12,6 @@
       overflow: hidden; /* No scrolling */
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom, #e0f7ff, #c0eaff, #a0dcff, #80ceff, #66bfff);
-
-
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
@@ -37,7 +35,6 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       box-sizing: border-box;
-      
     }
 
     .form-container h2 {
@@ -108,7 +105,7 @@
           <input type="text" name="studentName" required>
         </label>
 
-        <label>Register Number:
+        <label>Roll Number:
           <input type="text" name="rollNumber" required>
         </label>
       </div>
@@ -132,7 +129,7 @@
           <input type="text" name="parentName" required>
         </label>
       </div>
-
+      
       <div class="form-row">
         <label>Student Phone Number:
           <input type="text" name="relationship" required>
@@ -140,6 +137,13 @@
 
         <label>Parent Phone Number:
           <input type="text" name="phone" required>
+        </label>
+      </div>
+
+      <!-- ✅ New row for Email -->
+      <div class="form-row">
+        <label>Email:
+          <input type="email" name="email" required>
         </label>
       </div>
 
@@ -202,7 +206,7 @@
       })
       .then(res => {
         if (res.ok) {
-          window.location.href = "sucess.html";
+          window.location.href = "succes.html";
         } else {
           alert("Failed to submit request.");
         }
@@ -215,3 +219,4 @@
   </script>
 
 </body>
+</html>
