@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Approved Leave Requests</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #6dd5fa, #2980b9, #2c3e50);
+
+    background-repeat: repeat;
+    background-size: auto, cover;
+    padding: 40px;
+    margin: 0;
+
+    }
+    table {
+      border-collapse: collapse;
+      background-color: white;
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: rgb(255, 255, 255);
+    }
+    .forward-btn {
+      padding: 10px 15px;
+      background-color: rgb(12, 9, 3);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    title{
+      color: aliceblue;
+    }
+    h2{
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Approved Leave Requests</h2>
+
+  <!-- 🔶 Forward to HOD Button -->
+  <button class="forward-btn" onclick="forwardToHod()">Forward to HOD</button>
+
+  <table id="approvedTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Student Name</th>
+        <th>Roll Number</th>
+        <th>Course</th>
+        <th>Branch</th>
+        <th>Section</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Days</th>
+        <th>Reason</th>
+        <th>Parent</th>
+        <th>Phone</th>
+      </tr>
+    </thead>
+    <tbody id="approvedBody">
+      <!-- Approved rows will be inserted here -->
+    </tbody>
+  </table>
+  <script>
+  // Load approved leave requests (only those not forwarded to HOD)
+fetch('https://render2-2-rj1f.onrender.com/leaveform/approved')
+  .then(response => response.json())
+  .then(data => {
+    const tbody = document.getElementById('approvedBody');
+    tbody.innerHTML = ''; // Clear previous rows
+    data
+      .filter(req => !req.forwardedToHod) // ✅ Filter only not forwarded
+      .forEach(req => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${req.id}</td>
+          <td>${req.studentName}</td>
+          <td>${req.rollNumber}</td>
+          <td>${req.course}</td>
+          <td>${req.branch}</td>
+          <td>${req.section}</td>
+          <td>${req.fromDate}</td>
+          <td>${req.toDate}</td>
+          <td>${req.totalDays}</td>
+          <td>${req.reason}</td>
+          <td>${req.parentName} (${req.relationship})</td>
+          <td>${req.phone}</td>
+        `;
+        tbody.appendChild(row);
+      });
+  })
+  .catch(error => console.error('Error loading approved requests:', error));
+  function forwardToHod() {
+  fetch('https://render2-2-rj1f.onrender.com/hodform/forwardtohod', {
+    method: 'PUT'
+  })
+  .then(response => {
+    if (response.ok) {
+      alert("Successfully forwarded to HOD!");
+      location.reload(); // refreshes the page to reflect updated data
+    } else {
+      alert("Forwarding failed.");
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Something went wrong.");
+  });
+}
+
+</script>
+</body>
+</html>
