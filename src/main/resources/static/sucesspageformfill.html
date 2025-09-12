@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Success</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+    .message-box {
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="message-box">
+    <h1>✅ Leave Request Submitted!</h1>
+    <p>You will be redirected to your Student Dashboard in <span id="countdown">5</span> seconds...</p>
+  </div>
+
+  <script>
+    let seconds = 5;
+    const countdownEl = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+      seconds--;
+      countdownEl.textContent = seconds;
+      if (seconds === 0) {
+        clearInterval(timer);
+        window.location.href = "studentdashboard.html"; // ✅ Redirect
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
