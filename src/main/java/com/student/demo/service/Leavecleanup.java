@@ -14,7 +14,7 @@ public class Leavecleanup {
 	@Autowired
 	LeaveRequestRepository leaverepo;
 	 @Transactional
-	@Scheduled(cron="0 0 0 * * ?")
+	@Scheduled(cron="0 0 0 * * ?",zone="Asia/Kolkata") // Runs daily at midnight
 	public void deletereqbydatend() {
 		LocalDate today1=LocalDate.now();
 		leaverepo.deleteByToDateBefore(today1);
