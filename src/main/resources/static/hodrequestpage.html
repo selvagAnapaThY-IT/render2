@@ -90,7 +90,6 @@
             <textarea rows="2" id="reason-${req.id}">${req.reason}</textarea>
 
             <div class="btn-group">
-              <button class="btn edit" onclick="editRequest(${req.id})">Edit</button>
               <button class="btn approve" onclick="approveLeave(${req.id})">Approve</button>
               <button class="btn reject" onclick="updateStatus(${req.id}, 'reject')">Reject</button>
             </div>
