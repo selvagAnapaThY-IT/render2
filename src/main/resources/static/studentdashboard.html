@@ -532,7 +532,7 @@
       try {
         let apiUrl = `/api/students/profile?rollno=${encodeURIComponent(rollNo)}`;
         if (window.location.protocol === 'file:') {
-          apiUrl = `http://localhost:8080/api/students/profile?rollno=${encodeURIComponent(rollNo)}`;
+          apiUrl = `https://render2-10.onrender.com/api/students/profile?rollno=${encodeURIComponent(rollNo)}`;
         }
 
         let res = await fetch(apiUrl);
@@ -572,7 +572,7 @@
       try {
         let apiUrl = `/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
         if (window.location.protocol === 'file:') {
-          apiUrl = `http://localhost:8080/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
+          apiUrl = `https://render2-10.onrender.com/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
         }
 
         let res = await fetch(apiUrl);
@@ -705,7 +705,7 @@
       try {
         let apiUrl = "/api/students/profile/update";
         if (window.location.protocol === 'file:') {
-          apiUrl = "http://localhost:8080/api/students/profile/update";
+          apiUrl = "https://render2-10.onrender.com/api/students/profile/update";
         }
 
         let res = await fetch(apiUrl, {

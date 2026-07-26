@@ -54,23 +54,42 @@
   <div id="leaveRequestsContainer"></div>
 
   <script>
-  const apiBase = "https://render2-10.onrender.com/leaveform";
+  let apiBase = "/leaveform";
+  if (window.location.protocol === 'file:') {
+    apiBase = "https://render2-10.onrender.com/leaveform";
+  }
 
-  // Fetch all pending leave requests
+  function getTutorSection() {
+    const stored = localStorage.getItem("tutorProfile");
+    if (stored) {
+      try {
+        const p = JSON.parse(stored);
+        return p.section || "";
+      } catch(e) {}
+    }
+    return "";
+  }
+
+  // Fetch pending leave requests for tutor's section
   function fetchRequests() {
     const loader = document.getElementById("loader");
     const container = document.getElementById("leaveRequestsContainer");
+    const tutorSection = getTutorSection();
 
-    loader.style.display = "block";     // Show loading text
-    container.innerHTML = "";          // Clear current requests
+    loader.style.display = "block";
+    container.innerHTML = "";
 
     fetch(`${apiBase}/pending`)
       .then(res => res.json())
       .then(data => {
-        loader.style.display = "none";  // Hide loader
+        loader.style.display = "none";
+
+        if (tutorSection) {
+          data = data.filter(r => r.section && r.section.toLowerCase() === tutorSection.toLowerCase());
+        }
 
         if (data.length === 0) {
-          container.innerHTML = "<p>No pending requests.</p>";
+          container.innerHTML = `<p>No pending requests ${tutorSection ? 'for Section ' + tutorSection : ''}.</p>`;
           return;
         }
 
@@ -83,7 +102,7 @@
             <p><strong>Roll Number:</strong> ${req.rollNumber}</p>
             <p><strong>Course:</strong> ${req.course}</p>
             <p><strong>Branch:</strong> ${req.branch}</p>
-            <p><strong>Section:</strong> ${req.section}</p>
+            <p><strong>Section:</strong> <span style="font-weight:bold; color:blue;">${req.section}</span></p>
             <p><strong>From:</strong> ${req.fromDate}</p>
             <p><strong>To:</strong> ${req.toDate}</p>
             <p><strong>Total Days:</strong> ${req.totalDays}</p>
@@ -107,7 +126,7 @@
       });
   }
 
-  // Update status (approve, reject, forward)
+  // Update status (approve, reject)
   function updateStatus(id, action) {
     fetch(`${apiBase}/upd/${id}?action=${action}`, {
       method: "PUT"
@@ -115,7 +134,7 @@
     .then(res => {
       if (res.ok) {
         alert(`Leave request ${action.toUpperCase()}ED!`);
-        fetchRequests(); // Refresh list
+        fetchRequests();
       } else {
         alert("Failed to update request.");
       }

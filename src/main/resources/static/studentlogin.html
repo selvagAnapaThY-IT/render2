@@ -242,7 +242,7 @@ toggleBtn.addEventListener('click', () => {
             try {
                 let apiUrl = '/api/leaveform';
                 if (window.location.protocol === 'file:') {
-                    apiUrl = 'http://localhost:8080/api/leaveform';
+                    apiUrl = 'https://render2-10.onrender.com/api/leaveform';
                 }
 
                 let response = await fetch(apiUrl, {
@@ -263,14 +263,17 @@ toggleBtn.addEventListener('click', () => {
                     const data = await response.json();
                     console.log('Login successful:', data);
                     if (data.role === 'tutor') {
+                        localStorage.setItem('tutorProfile', JSON.stringify(data));
                         window.location.href = 'tutor-dashboard.html';
                     } else if (data.role === 'student') {
                         localStorage.setItem('studentProfile', JSON.stringify(data));
                         localStorage.setItem('studentRollNo', data.rollno || data.username || username);
                         window.location.href = 'studentdashboard.html';
                     } else if (data.role === 'hod') {
+                        localStorage.setItem('hodProfile', JSON.stringify(data));
                         window.location.href = 'hoddashboard.html';
                     } else if (data.role === 'admin') {
+                        localStorage.setItem('adminProfile', JSON.stringify(data));
                         window.location.href = 'admindashboard.html';
                     } else {
                         localStorage.setItem('studentProfile', JSON.stringify(data));

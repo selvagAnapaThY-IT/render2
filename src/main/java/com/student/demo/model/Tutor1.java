@@ -18,6 +18,10 @@ public class Tutor1 {
 	 private String role;
 	 private String name;
 	 private String department;
+	 private String email;
+	 private String phone;
+	 private String section;
+
 	 public Long getId() {
 		 return id;
 	 }
@@ -55,6 +59,25 @@ public class Tutor1 {
 	 public void setDepartment(String department) {
 		 this.department = department;
 	 }
+	 public String getEmail() {
+		 return email;
+	 }
+	 public void setEmail(String email) {
+		 this.email = email;
+	 }
+	 public String getPhone() {
+		 return phone;
+	 }
+	 public void setPhone(String phone) {
+		 this.phone = phone;
+	 }
+	 public String getSection() {
+		 return section;
+	 }
+	 public void setSection(String section) {
+		 this.section = section;
+	 }
+
 	 public Tutor1() {
 		
 	 }

@@ -3,100 +3,475 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>tutor Dashboard</title>
+  <title>Tutor Portal & Section Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('tutor.jpg') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      color: #333;
     }
 
     .dashboard-container {
       display: flex;
-      width: 100%;
       min-height: 100vh;
     }
 
+    /* Sidebar */
     .sidebar {
-      width: 250px;
-      background-color: rgb(25, 89, 217);
-      color: #ffffff;
+      width: 260px;
+      background: linear-gradient(180deg, #1e3c72, #2a5298);
+      color: #fff;
       padding: 30px 20px;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.15);
     }
 
     .sidebar h2 {
-      margin-top: 0;
-      font-size: 24px;
-      margin-bottom: 20px;
+      font-size: 20px;
+      margin-bottom: 25px;
       text-align: center;
+      font-weight: 700;
     }
 
     .sidebar ul {
       list-style: none;
-      padding: 0;
     }
 
     .sidebar ul li {
-      margin: 20px 0;
+      margin-bottom: 12px;
     }
 
-    .sidebar ul li a, .sidebar ul li p {
-      color: #ffffff;
+    .sidebar ul li a {
+      color: rgba(255, 255, 255, 0.85);
       text-decoration: none;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sidebar ul li a i {
+      margin-right: 12px;
       font-size: 16px;
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
+      width: 20px;
+      text-align: center;
     }
 
-    .sidebar ul li a:hover {
-      background-color: #2980b9;
+    .sidebar ul li a:hover,
+    .sidebar ul li.active a {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-weight: 600;
     }
 
+    /* Main Content */
     .main-content {
       flex: 1;
-      padding: 60px;
-      color: #2c3e50;
+      padding: 30px 40px;
+      overflow-y: auto;
     }
 
-    .main-content header h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
+    .header-banner {
+      background: #ffffff;
+      padding: 24px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .main-content p {
+    .header-banner h1 {
+      font-size: 24px;
+      color: #1e3c72;
+      margin-bottom: 4px;
+    }
+
+    .header-banner p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      padding: 26px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .card-title {
       font-size: 18px;
+      font-weight: 700;
+      color: #1e3c72;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f0f2f5;
+      padding-bottom: 12px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .profile-item {
+      background: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 8px;
+      border-left: 4px solid #2a5298;
+    }
+
+    .profile-item label {
+      font-size: 12px;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .profile-item span {
+      font-size: 15px;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      transition: all 0.2s;
+    }
+
+    .btn-approve { background-color: #2e7d32; }
+    .btn-approve:hover { background-color: #1b5e20; }
+    .btn-reject { background-color: #c62828; }
+    .btn-reject:hover { background-color: #b71c1c; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
 
   <div class="dashboard-container">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <h2>Tutor Panel</h2>
+      <h2>Tutor Portal</h2>
       <ul>
-        <li><p>Dashboard</p></li>
-        <li><a href="tutorpendingreq.html">Leave Requests</a></li>
-        <li><a href="approvedreqbytut.html">Approved Leave Requests</a></li>
-        <li><a href="historyintutor.html">Leave Request History</a></li>
-        <li><a href="addstudent.html">Addstudent</a></li>
-        <li><a href="reject2.html">Rejected list</a></li>
-        <li><a href="index.html">Logout</a></li>
+        <li class="active" id="navDashboard"><a onclick="showTab('dashboard')"><i class="fas fa-user-tie"></i> Profile & Section</a></li>
+        <li id="navPending"><a onclick="showTab('pending')"><i class="fas fa-clock"></i> Class Leave Requests</a></li>
+        <li id="navStudents"><a onclick="showTab('students')"><i class="fas fa-users"></i> Section Students</a></li>
+        <li><a href="approvedreqbytut.html"><i class="fas fa-circle-check"></i> Approved Requests</a></li>
+        <li><a href="reject2.html"><i class="fas fa-circle-xmark"></i> Rejected Requests</a></li>
+        <li><a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
     </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
-      <header>
-        <h1>Welcome, TUTOR!</h1>
-      </header>
-      <section class="content">
-        <p>Use the sidebar to view and manage student leave requests.</p>
-      </section>
+      <!-- Header Banner -->
+      <div class="header-banner">
+        <div>
+          <h1 id="tutorHeader">Welcome, Tutor!</h1>
+          <p id="tutorSubtext">Assigned Class Section Dashboard</p>
+        </div>
+      </div>
+
+      <!-- Tab 1: Profile & Overview -->
+      <div id="tabDashboard" class="card">
+        <div class="card-title">
+          <span><i class="fas fa-address-card"></i> Individual Tutor Profile</span>
+        </div>
+        <div class="profile-grid">
+          <div class="profile-item"><label>Tutor Name</label><span id="tutName">N/A</span></div>
+          <div class="profile-item"><label>Username / ID</label><span id="tutUser">N/A</span></div>
+          <div class="profile-item"><label>Email Address</label><span id="tutEmail">N/A</span></div>
+          <div class="profile-item"><label>Phone Number</label><span id="tutPhone">N/A</span></div>
+          <div class="profile-item"><label>Department</label><span id="tutDept">N/A</span></div>
+          <div class="profile-item"><label>Assigned Class Section</label><span id="tutSection" style="color: #2a5298; font-weight: bold; font-size: 16px;">N/A</span></div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Pending Leave Requests for Assigned Section -->
+      <div id="tabPending" class="card">
+        <div class="card-title">
+          <span><i class="fas fa-file-signature"></i> Pending Leave Requests for Section <span id="sectionLabel">A</span></span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Roll No</th>
+                <th>Section</th>
+                <th>From - To</th>
+                <th>Days</th>
+                <th>Reason</th>
+                <th>Contact</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pendingTableBody">
+              <tr><td colspan="8" style="text-align:center;">Loading section leave requests...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Section Students Directory -->
+      <div id="tabStudents" class="card">
+        <div class="card-title">
+          <span><i class="fas fa-user-graduate"></i> Students List in Assigned Section</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Department</th>
+                <th>Course & Branch</th>
+                <th>Section</th>
+                <th>Student Email / Phone</th>
+                <th>Parent Info</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody">
+              <tr><td colspan="7" style="text-align:center;">Loading section students...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 
+  <script>
+    let currentTutor = {};
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadTutorProfile();
+    });
+
+    function loadTutorProfile() {
+      const stored = localStorage.getItem("tutorProfile");
+      if (stored) {
+        try {
+          currentTutor = JSON.parse(stored);
+          renderTutorUI(currentTutor);
+        } catch(e) {}
+      } else {
+        renderTutorUI({ name: "Tutor", username: "tutor", department: "N/A", section: "A" });
+      }
+
+      const assignedSection = currentTutor.section || "A";
+      fetchSectionPendingLeaves(assignedSection);
+      fetchSectionStudents(assignedSection);
+    }
+
+    function renderTutorUI(tutor) {
+      document.getElementById("tutorHeader").textContent = `Welcome, ${tutor.name || tutor.username || 'Tutor'}!`;
+      document.getElementById("tutorSubtext").textContent = `Department: ${tutor.department || 'N/A'} | Class Section: Section ${tutor.section || 'All'}`;
+      document.getElementById("sectionLabel").textContent = tutor.section || 'All';
+
+      document.getElementById("tutName").textContent = tutor.name || tutor.username || "N/A";
+      document.getElementById("tutUser").textContent = tutor.username || "N/A";
+      document.getElementById("tutEmail").textContent = tutor.email || "N/A";
+      document.getElementById("tutPhone").textContent = tutor.phone || "N/A";
+      document.getElementById("tutDept").textContent = tutor.department || "N/A";
+      document.getElementById("tutSection").textContent = tutor.section ? `Section ${tutor.section}` : "All Sections";
+    }
+
+    async function fetchSectionPendingLeaves(section) {
+      try {
+        let apiUrl = `/leaveform/section/pending?section=${encodeURIComponent(section)}`;
+        if (window.location.protocol === 'file:') {
+          apiUrl = `https://render2-10.onrender.com/leaveform/section/pending?section=${encodeURIComponent(section)}`;
+        }
+
+        let res = await fetch(apiUrl);
+        if (!res.ok) {
+          res = await fetch("https://render2-10.onrender.com/leaveform/pending");
+        }
+
+        if (res.ok) {
+          let data = await res.json();
+          if (section && section !== 'All') {
+            data = data.filter(r => !r.section || r.section.equalsIgnoreCase ? r.section.equalsIgnoreCase(section) : r.section.toLowerCase() === section.toLowerCase());
+          }
+          renderPendingTable(data);
+        } else {
+          document.getElementById("pendingTableBody").innerHTML = `<tr><td colspan="8" style="text-align:center;">No pending requests for Section ${section}.</td></tr>`;
+        }
+      } catch (err) {
+        console.error("Failed to load pending requests:", err);
+        document.getElementById("pendingTableBody").innerHTML = `<tr><td colspan="8" style="text-align:center;">Error connecting to leave service.</td></tr>`;
+      }
+    }
+
+    function renderPendingTable(requests) {
+      const tbody = document.getElementById("pendingTableBody");
+      tbody.innerHTML = "";
+
+      if (!requests || requests.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No pending leave applications for your assigned section.</td></tr>`;
+        return;
+      }
+
+      requests.forEach(req => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${req.studentName || '-'}</td>
+          <td>${req.rollNumber || '-'}</td>
+          <td><span style="font-weight:bold; color:#1e3c72;">${req.section || '-'}</span></td>
+          <td>${req.fromDate || '-'} to ${req.toDate || '-'}</td>
+          <td>${req.totalDays || 0}</td>
+          <td>${req.reason || '-'}</td>
+          <td>${req.phone || req.email || '-'}</td>
+          <td>
+            <button class="btn btn-approve" onclick="updateStatus(${req.id}, 'approve')">Approve</button>
+            <button class="btn btn-reject" onclick="updateStatus(${req.id}, 'reject')">Reject</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function updateStatus(id, action) {
+      try {
+        let apiUrl = `/leaveform/upd/${id}?action=${action}`;
+        if (window.location.protocol === 'file:') {
+          apiUrl = `https://render2-10.onrender.com/leaveform/upd/${id}?action=${action}`;
+        }
+
+        let res = await fetch(apiUrl, { method: "PUT" });
+        if (res.ok) {
+          alert(`Leave request ${action.toUpperCase()}ED successfully!`);
+          fetchSectionPendingLeaves(currentTutor.section || "A");
+        } else {
+          alert("Failed to update status.");
+        }
+      } catch (err) {
+        console.error("Error updating status:", err);
+        alert("Server error.");
+      }
+    }
+
+    async function fetchSectionStudents(section) {
+      try {
+        let apiUrl = `/api/students/section?section=${encodeURIComponent(section)}`;
+        if (window.location.protocol === 'file:') {
+          apiUrl = `https://render2-10.onrender.com/api/students/section?section=${encodeURIComponent(section)}`;
+        }
+
+        let res = await fetch(apiUrl);
+        if (!res.ok) {
+          res = await fetch("https://render2-10.onrender.com/api/students/all");
+        }
+
+        if (res.ok) {
+          let students = await res.json();
+          if (section && section !== 'All') {
+            students = students.filter(s => s.section && s.section.toLowerCase() === section.toLowerCase());
+          }
+          renderStudentsTable(students);
+        } else {
+          document.getElementById("studentTableBody").innerHTML = `<tr><td colspan="7" style="text-align:center;">No students found in section ${section}.</td></tr>`;
+        }
+      } catch (err) {
+        console.error("Error fetching section students:", err);
+      }
+    }
+
+    function renderStudentsTable(students) {
+      const tbody = document.getElementById("studentTableBody");
+      tbody.innerHTML = "";
+
+      if (!students || students.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No registered students in your section.</td></tr>`;
+        return;
+      }
+
+      students.forEach(st => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${st.name || st.username || '-'}</td>
+          <td>${st.rollno || st.username || '-'}</td>
+          <td>${st.department || '-'}</td>
+          <td>${st.course || '-'} (${st.branch || '-'})</td>
+          <td><span style="font-weight:bold; color:#1e3c72;">${st.section || '-'}</span></td>
+          <td>${st.email || '-'}<br><small>${st.phone || ''}</small></td>
+          <td>${st.parentName || '-'}<br><small>${st.parentPhone || ''}</small></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function showTab(tabName) {
+      document.getElementById("navDashboard").classList.remove("active");
+      document.getElementById("navPending").classList.remove("active");
+      document.getElementById("navStudents").classList.remove("active");
+
+      document.getElementById("tabDashboard").style.display = "none";
+      document.getElementById("tabPending").style.display = "none";
+      document.getElementById("tabStudents").style.display = "none";
+
+      if (tabName === "dashboard") {
+        document.getElementById("navDashboard").classList.add("active");
+        document.getElementById("tabDashboard").style.display = "block";
+      } else if (tabName === "pending") {
+        document.getElementById("navPending").classList.add("active");
+        document.getElementById("tabPending").style.display = "block";
+      } else if (tabName === "students") {
+        document.getElementById("navStudents").classList.add("active");
+        document.getElementById("tabStudents").style.display = "block";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("tutorProfile");
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
 </html>

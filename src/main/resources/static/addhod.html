@@ -60,40 +60,55 @@
 <body>
 
   <div class="form-container">
-    <h2>Add HOD</h2>
+    <h2>Add HOD Profile (Admin)</h2>
     <form id="addHodForm">
-      <input type="text" name="name" placeholder="HOD Name" required>
-      <input type="text" name="username" placeholder="Username" required>
+      <input type="text" name="name" placeholder="Full HOD Name" required>
+      <input type="text" name="username" placeholder="Username / Login ID" required>
+      <input type="email" name="email" placeholder="HOD Email Address" required>
+      <input type="text" name="phone" placeholder="HOD Phone Number">
       <input type="password" name="password" placeholder="Password" required>
-      <input type="text" name="department" placeholder="Department" required>
+      <input type="text" name="department" placeholder="Department (e.g. CSE)" required>
       <input type="hidden" name="role" value="hod">
-      <button type="submit">Add HOD</button>
+      <button type="submit">Add HOD Profile</button>
     </form>
   </div>
 
   <script>
-    document.getElementById("addHodForm").addEventListener("submit", function (e) {
+    document.getElementById("addHodForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
 
-      fetch("https://render2-10.onrender.com/hodform/addhod", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
+      try {
+        let apiUrl = "/hodform/addhod";
+        if (window.location.protocol === 'file:') {
+          apiUrl = "https://render2-10.onrender.com/hodform/addhod";
+        }
+
+        let response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok && apiUrl !== "https://render2-10.onrender.com/hodform/addhod") {
+          response = await fetch("https://render2-10.onrender.com/hodform/addhod", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+        }
+
         if (response.ok) {
-          alert("HOD added successfully!");
+          alert("HOD profile added successfully!");
           this.reset();
         } else {
           alert("Failed to add HOD.");
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Error:", error);
         alert("Server error.");
-      });
+      }
     });
   </script>
 

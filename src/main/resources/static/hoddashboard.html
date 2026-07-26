@@ -3,101 +3,205 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOD Dashboard</title>
+  <title>HOD Portal & Profile Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('hodwelcome.jpg') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      color: #333;
     }
 
     .dashboard-container {
       display: flex;
-      width: 100%;
       min-height: 100vh;
     }
 
     .sidebar {
-      width: 250px;
-      background-color: rgba(44, 62, 80, 0.95);
+      width: 260px;
+      background: linear-gradient(180deg, #2c3e50, #1a252f);
       color: #fff;
       padding: 30px 20px;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 10px rgba(0,0,0,0.2);
     }
 
     .sidebar h2 {
-      margin-top: 0;
-      font-size: 24px;
-      margin-bottom: 20px;
+      font-size: 20px;
+      margin-bottom: 25px;
       text-align: center;
+      font-weight: 700;
     }
 
     .sidebar ul {
       list-style: none;
-      padding: 0;
     }
 
     .sidebar ul li {
-      margin: 20px 0;
+      margin-bottom: 12px;
     }
 
-    .sidebar ul li a, .sidebar ul li p {
-      color: #ecf0f1;
+    .sidebar ul li a {
+      color: rgba(255, 255, 255, 0.85);
       text-decoration: none;
-      font-size: 16px;
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
     }
 
-    .sidebar ul li a:hover {
-      background-color: #2980b9;
+    .sidebar ul li a i {
+      margin-right: 12px;
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li.active a {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-weight: 600;
     }
 
     .main-content {
       flex: 1;
-      padding: 60px;
-      color: #ffffff;
-
+      padding: 30px 40px;
+      overflow-y: auto;
     }
 
-    .main-content header h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
+    .header-banner {
+      background: #ffffff;
+      padding: 24px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
     }
 
-    .main-content p {
+    .header-banner h1 {
+      font-size: 24px;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    .header-banner p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 26px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .card-title {
       font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f0f2f5;
+      padding-bottom: 12px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .profile-item {
+      background: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 8px;
+      border-left: 4px solid #2c3e50;
+    }
+
+    .profile-item label {
+      font-size: 12px;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .profile-item span {
+      font-size: 15px;
+      color: #1e293b;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
 
   <div class="dashboard-container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>HOD Panel</h2>
       <ul>
-        <li><p>Dashboard</p></li>
-        <li><a href="hodrequestpage.html">Forwarded Leave Requests</a></li>
-        <li><a href="hodapproved.html">Approved Leave Requests</a></li>
-        <li><a href="historyintutor.html">Leave Request History</a></li>
-        <li><a href="tutoradd.html">Tutors</a></li>
-        <li><a href="rejected.html">rejected List</a></li>
-        <li><a href="index.html">Logout</a></li>
+        <li class="active"><a href="hoddashboard.html"><i class="fas fa-user-shield"></i> Profile & Dashboard</a></li>
+        <li><a href="hodrequestpage.html"><i class="fas fa-file-export"></i> Forwarded Leave Requests</a></li>
+        <li><a href="hodapproved.html"><i class="fas fa-circle-check"></i> Approved Requests</a></li>
+        <li><a href="rejected.html"><i class="fas fa-circle-xmark"></i> Rejected List</a></li>
+        <li><a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
     </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
-      <header>
-        <h1>Welcome, HOD!</h1>
-      </header>
-      <section class="content">
-        <p>Use the sidebar to view and manage student leave requests.</p>
-      </section>
+      <div class="header-banner">
+        <h1 id="hodHeader">Welcome, HOD!</h1>
+        <p id="hodSubtext">Department Head Dashboard</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fas fa-id-badge"></i> HOD Profile Details</div>
+        <div class="profile-grid">
+          <div class="profile-item"><label>HOD Name</label><span id="hodName">N/A</span></div>
+          <div class="profile-item"><label>Username / Login ID</label><span id="hodUser">N/A</span></div>
+          <div class="profile-item"><label>Email Address</label><span id="hodEmail">N/A</span></div>
+          <div class="profile-item"><label>Phone Number</label><span id="hodPhone">N/A</span></div>
+          <div class="profile-item"><label>Department</label><span id="hodDept" style="color: #2c3e50; font-weight: bold;">N/A</span></div>
+        </div>
+      </div>
     </main>
   </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const stored = localStorage.getItem("hodProfile");
+      if (stored) {
+        try {
+          const h = JSON.parse(stored);
+          document.getElementById("hodHeader").textContent = `Welcome, ${h.name || h.username || 'HOD'}!`;
+          document.getElementById("hodSubtext").textContent = `Head of Department: ${h.department || 'N/A'}`;
+
+          document.getElementById("hodName").textContent = h.name || h.username || "N/A";
+          document.getElementById("hodUser").textContent = h.username || "N/A";
+          document.getElementById("hodEmail").textContent = h.email || "N/A";
+          document.getElementById("hodPhone").textContent = h.phone || "N/A";
+          document.getElementById("hodDept").textContent = h.department || "N/A";
+        } catch(e) {}
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem("hodProfile");
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
 </html>

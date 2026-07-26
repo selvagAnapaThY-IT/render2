@@ -113,7 +113,7 @@
       try {
         let apiUrl = "/api/students/add";
         if (window.location.protocol === 'file:') {
-          apiUrl = "http://localhost:8080/api/students/add";
+          apiUrl = "https://render2-10.onrender.com/api/students/add";
         }
 
         let response = await fetch(apiUrl, {
@@ -147,7 +147,7 @@
       try {
         let apiUrl = "/api/students/all";
         if (window.location.protocol === 'file:') {
-          apiUrl = "http://localhost:8080/api/students/all";
+          apiUrl = "https://render2-10.onrender.com/api/students/all";
         }
 
         let response = await fetch(apiUrl);

@@ -128,7 +128,7 @@
       try {
         let apiUrl = `/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
         if (window.location.protocol === 'file:') {
-          apiUrl = `http://localhost:8080/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
+          apiUrl = `https://render2-10.onrender.com/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
         }
 
         let res = await fetch(apiUrl);

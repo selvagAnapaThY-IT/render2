@@ -8,5 +8,6 @@ import com.student.demo.model.Hod;
 
 
 public interface HodRepo extends JpaRepository<Hod,Long> {
-	Optional<Hod>findByUsername(String username);
+	Optional<Hod> findByUsername(String username);
+	Optional<Hod> findByEmail(String email);
 }

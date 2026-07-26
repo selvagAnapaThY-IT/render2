@@ -35,6 +35,13 @@ public class LeaveController{
         System.out.println("Fetched " + pending.size() + " pending requests");
         return pending;
     }
+
+    @GetMapping("/section/pending")
+    public List<LeaveRequest> getPendingBySection(@RequestParam String section) {
+        return service.getByStatus("PENDING").stream()
+                .filter(req -> req.getSection() != null && req.getSection().equalsIgnoreCase(section))
+                .toList();
+    }
     @GetMapping("/approved-by-hod")
     public List<LeaveRequest> getApprovedByHod() {
         return service.getByStatus("HOD_APPROVED");
