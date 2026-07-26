@@ -68,13 +68,21 @@
 </head>
 <body>
   <div class="container">
-    <h2>Add Student</h2>
+    <h2>Add Student Profile</h2>
     <form id="studentForm">
-      <input type="text" name="username" placeholder="Username" required />
+      <input type="text" name="username" placeholder="Username / Login ID" required />
       <input type="password" name="password" placeholder="Password" required />
-      <input type="text" name="role" placeholder="Role (e.g. student)" required />
-      <input type="text" name="rollno" placeholder="rollnumber" required />
-      <input type="text" name="department" placeholder="department" required />
+      <input type="text" name="name" placeholder="Full Student Name" required />
+      <input type="text" name="rollno" placeholder="Roll Number" required />
+      <input type="text" name="department" placeholder="Department" required />
+      <input type="text" name="course" placeholder="Course (e.g. B.Tech)" />
+      <input type="text" name="branch" placeholder="Branch (e.g. CSE)" />
+      <input type="text" name="section" placeholder="Section (e.g. A)" />
+      <input type="email" name="email" placeholder="Student Email" />
+      <input type="text" name="phone" placeholder="Student Phone" />
+      <input type="text" name="parentName" placeholder="Parent Name" />
+      <input type="text" name="parentPhone" placeholder="Parent Phone" />
+      <input type="hidden" name="role" value="student" />
       <button type="submit">Add Student</button>
     </form>
 
@@ -84,10 +92,12 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Rollnumber</th>
-          <th>department</th>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Dept</th>
+          <th>Course</th>
+          <th>Branch</th>
+          <th>Email</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -95,50 +105,76 @@
   </div>
 
   <script>
-    document.getElementById("studentForm").addEventListener("submit", function (e) {
+    document.getElementById("studentForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
 
-      fetch("https://render2-10.onrender.com/api/students/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
+      try {
+        let apiUrl = "/api/students/add";
+        if (window.location.protocol === 'file:') {
+          apiUrl = "http://localhost:8080/api/students/add";
+        }
+
+        let response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok && apiUrl !== "https://render2-10.onrender.com/api/students/add") {
+          response = await fetch("https://render2-10.onrender.com/api/students/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+        }
+
         if (response.ok) {
-          alert("Student added successfully!");
+          alert("Student profile added successfully!");
           this.reset();
+          loadStudents();
         } else {
           alert("Failed to add student.");
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Error:", error);
         alert("Server error.");
-      });
+      }
     });
 
-    function loadStudents() {
-      fetch("https://render2-2-rj1f.onrender.com/api/students/all")
-        .then(response => response.json())
-        .then(data => {
-          const table = document.getElementById("studentTable");
-          const tbody = table.querySelector("tbody");
-          tbody.innerHTML = "";
-          data.forEach(student => {
-            const row = `<tr>
-              <td>${student.id}</td>
-              <td>${student.username}</td>
-              <td>${student.role}</td>
-              <td>${student.rollno}</td>
-              <td>${student.department}</td>
-              
-            </tr>`;
-            tbody.innerHTML += row;
-          });
-          table.style.display = "table";
+    async function loadStudents() {
+      try {
+        let apiUrl = "/api/students/all";
+        if (window.location.protocol === 'file:') {
+          apiUrl = "http://localhost:8080/api/students/all";
+        }
+
+        let response = await fetch(apiUrl);
+        if (!response.ok) {
+          response = await fetch("https://render2-10.onrender.com/api/students/all");
+        }
+
+        const data = await response.json();
+        const table = document.getElementById("studentTable");
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = "";
+        data.forEach(student => {
+          const row = `<tr>
+            <td>${student.id}</td>
+            <td>${student.name || student.username || '-'}</td>
+            <td>${student.rollno || student.username || '-'}</td>
+            <td>${student.department || '-'}</td>
+            <td>${student.course || '-'}</td>
+            <td>${student.branch || '-'}</td>
+            <td>${student.email || '-'}</td>
+          </tr>`;
+          tbody.innerHTML += row;
         });
+        table.style.display = "table";
+      } catch(err) {
+        console.error("Failed to load students:", err);
+      }
     }
   </script>
 </body>

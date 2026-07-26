@@ -82,51 +82,117 @@
 
   <div class="container">
     <h2>Search Your Leave Details</h2>
-    <input type="text" id="rollNumber" placeholder="Enter Roll Number">
-    <button onclick="search()">Search</button>
+    <div style="margin-bottom: 15px;">
+      <input type="text" id="rollNumber" placeholder="Enter Roll Number">
+      <button onclick="search()">Search</button>
+      <button onclick="window.location.href='studentdashboard.html'" style="background-color: #27ae60; margin-left: 5px;">Back to Dashboard</button>
+    </div>
+
+    <div id="filterButtons" style="margin: 15px 0; display: none;">
+      <button onclick="filterResults('ALL')" style="padding: 6px 12px; font-size: 13px;">All</button>
+      <button onclick="filterResults('PENDING')" style="padding: 6px 12px; font-size: 13px; background-color: #f39c12;">Pending</button>
+      <button onclick="filterResults('APPROVED')" style="padding: 6px 12px; font-size: 13px; background-color: #2ecc71;">Approved</button>
+      <button onclick="filterResults('REJECTED')" style="padding: 6px 12px; font-size: 13px; background-color: #e74c3c;">Rejected</button>
+    </div>
 
     <div id="result"></div>
   </div>
 
   <script>
-    function search() {
-      const rollNo = document.getElementById('rollNumber').value;
-      fetch(`https://render2-10.onrender.com/leaveform/search?rollNumber=${rollNo}`)
-        .then(res => {
-          if (!res.ok) throw new Error("No data found");
-          return res.json();
-        })
-        .then(data => {
-          let html = `
-            <h3>Results:</h3>
-            <table>
-              <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Reason</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Days</th>
-              </tr>
-          `;
-          data.forEach(item => {
-            html += `
-              <tr>
-                <td>${item.studentName}</td>
-                <td>${item.status}</td>
-                <td>${item.reason}</td>
-                <td>${item.fromDate}</td>
-                <td>${item.toDate}</td>
-                <td>${item.totalDays}</td>
-              </tr>
-            `;
-          });
-          html += '</table>';
-          document.getElementById('result').innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById('result').innerHTML = `<p class="error">No leave found for roll number ${rollNo}</p>`;
-        });
+    let fetchedLeaves = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const stored = localStorage.getItem("studentProfile");
+      if (stored) {
+        try {
+          const p = JSON.parse(stored);
+          const roll = p.rollno || p.username || localStorage.getItem("studentRollNo");
+          if (roll) {
+            document.getElementById("rollNumber").value = roll;
+            search();
+          }
+        } catch(e) {}
+      } else {
+        const roll = localStorage.getItem("studentRollNo");
+        if (roll) {
+          document.getElementById("rollNumber").value = roll;
+          search();
+        }
+      }
+    });
+
+    async function search() {
+      const rollNo = document.getElementById('rollNumber').value.trim();
+      if (!rollNo) return;
+
+      try {
+        let apiUrl = `/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
+        if (window.location.protocol === 'file:') {
+          apiUrl = `http://localhost:8080/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`;
+        }
+
+        let res = await fetch(apiUrl);
+        if (!res.ok) {
+          res = await fetch(`https://render2-10.onrender.com/leaveform/search?rollNumber=${encodeURIComponent(rollNo)}`);
+        }
+
+        if (!res.ok) throw new Error("No data found");
+        fetchedLeaves = await res.json();
+
+        document.getElementById("filterButtons").style.display = "block";
+        filterResults('ALL');
+      } catch (err) {
+        document.getElementById("filterButtons").style.display = "none";
+        document.getElementById('result').innerHTML = `<p class="error">No leave records found for roll number: ${rollNo}</p>`;
+      }
+    }
+
+    function filterResults(category) {
+      let filtered = fetchedLeaves;
+      if (category === "PENDING") {
+        filtered = fetchedLeaves.filter(i => i.status === "PENDING" || i.status === "FORWARDED_TO_HOD");
+      } else if (category === "APPROVED") {
+        filtered = fetchedLeaves.filter(i => i.status === "APPROVED_BY_TUTOR" || i.status === "HOD_APPROVED");
+      } else if (category === "REJECTED") {
+        filtered = fetchedLeaves.filter(i => i.status === "REJECTED_BY_TUTOR" || i.status === "HOD_REJECTED");
+      }
+
+      if (filtered.length === 0) {
+        document.getElementById('result').innerHTML = `<p class="error">No ${category.toLowerCase()} leave requests found.</p>`;
+        return;
+      }
+
+      let html = `
+        <h3>Leave Details (${category}):</h3>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Reason</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Days</th>
+          </tr>
+      `;
+      filtered.forEach(item => {
+        let statusBadge = item.status;
+        if (item.status === 'APPROVED_BY_TUTOR' || item.status === 'HOD_APPROVED') statusBadge = '🟢 ' + item.status;
+        else if (item.status === 'REJECTED_BY_TUTOR' || item.status === 'HOD_REJECTED') statusBadge = '🔴 ' + item.status;
+        else statusBadge = '🟡 ' + item.status;
+
+        html += `
+          <tr>
+            <td>${item.studentName || '-'}</td>
+            <td>${statusBadge}</td>
+            <td>${item.reason || '-'}</td>
+            <td>${item.fromDate || '-'}</td>
+            <td>${item.toDate || '-'}</td>
+            <td>${item.totalDays || 0}</td>
+          </tr>
+        `;
+      });
+      html += '</table>';
+      document.getElementById('result').innerHTML = html;
     }
   </script>
 

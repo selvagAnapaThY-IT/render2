@@ -203,6 +203,30 @@
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      autoFillProfile();
+    });
+
+    function autoFillProfile() {
+      const stored = localStorage.getItem("studentProfile");
+      if (!stored) return;
+      try {
+        const p = JSON.parse(stored);
+        const form = document.getElementById("leaveForm");
+        if (p.name || p.username) form.elements["studentName"].value = p.name || p.username;
+        if (p.rollno || p.username) form.elements["rollNumber"].value = p.rollno || p.username;
+        if (p.course) form.elements["course"].value = p.course;
+        if (p.branch) form.elements["branch"].value = p.branch;
+        if (p.section) form.elements["section"].value = p.section;
+        if (p.parentName) form.elements["parentName"].value = p.parentName;
+        if (p.phone) form.elements["relationship"].value = p.phone;
+        if (p.parentPhone) form.elements["phone"].value = p.parentPhone;
+        if (p.email) form.elements["email"].value = p.email;
+      } catch (e) {
+        console.error("Error parsing stored profile:", e);
+      }
+    }
+
     flatpickr("#fromDate", { dateFormat: "Y-m-d", onChange: calculateDays });
     flatpickr("#toDate", { dateFormat: "Y-m-d", onChange: calculateDays });
 
@@ -217,12 +241,12 @@
       }
     }
 
-    document.getElementById("leaveForm").addEventListener("submit", function (e) {
+    document.getElementById("leaveForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const days = parseInt(document.getElementById("totalDays").value);
-      if (days === 0) {
-        alert("Leave days cannot be zero!");
+      if (!days || days <= 0) {
+        alert("Leave days must be greater than zero!");
         return;
       }
 
@@ -230,23 +254,35 @@
       const data = Object.fromEntries(formData.entries());
       data.status = "PENDING";
 
-      fetch("https://render2-10.onrender.com/leaveform/ins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => {
+      try {
+        let apiUrl = "/leaveform/ins";
+        if (window.location.protocol === 'file:') {
+          apiUrl = "http://localhost:8080/leaveform/ins";
+        }
+
+        let res = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok && apiUrl !== "https://render2-10.onrender.com/leaveform/ins") {
+          res = await fetch("https://render2-10.onrender.com/leaveform/ins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+        }
+
         if (res.ok) {
-          this.reset();
           window.location.href = "sucesspageformfill.html";
         } else {
-          alert("Failed to submit request.");
+          alert("Failed to submit leave request.");
         }
-      })
-      .catch(err => {
+      } catch (err) {
         console.error("Error:", err);
         alert("Server error while submitting.");
-      });
+      }
     });
   </script>
 
